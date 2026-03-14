@@ -1,0 +1,40 @@
+import { ExpoConfig, ConfigContext } from 'expo/config';
+
+const basePath = process.env.EXPO_PUBLIC_BASE_PATH || '';
+
+export default ({ config }: ConfigContext): ExpoConfig => ({
+  ...config,
+  name: 'App-speed-test',
+  slug: 'App-speed-test',
+  version: '1.0.0',
+  orientation: 'portrait',
+  icon: './assets/images/icon.png',
+  scheme: 'appspeedtest',
+  userInterfaceStyle: 'automatic',
+  splash: {
+    image: './assets/images/splash-icon.png',
+    resizeMode: 'contain',
+    backgroundColor: '#ffffff',
+  },
+  ios: {
+    supportsTablet: true,
+  },
+  android: {
+    adaptiveIcon: {
+      backgroundColor: '#E6F4FE',
+      foregroundImage: './assets/images/android-icon-foreground.png',
+      backgroundImage: './assets/images/android-icon-background.png',
+      monochromeImage: './assets/images/android-icon-monochrome.png',
+    },
+  },
+  web: {
+    bundler: 'metro',
+    output: 'static',
+    favicon: './assets/images/favicon.png',
+  },
+  plugins: ['expo-router'],
+  experiments: {
+    typedRoutes: true,
+    ...(basePath ? { baseUrl: basePath } : {}),
+  },
+});
