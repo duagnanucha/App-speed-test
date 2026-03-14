@@ -14,7 +14,7 @@ export const COLORS = {
   textDim: '#6a6a7a',
 };
 
-export const PING_URL = 'https://www.google.com/generate_204';
+export const PING_URL = 'https://speed.cloudflare.com/__down?bytes=0';
 export const DOWNLOAD_URL = 'https://speed.cloudflare.com/__down?bytes=10000000';
 export const UPLOAD_URL = 'https://speed.cloudflare.com/__up';
 

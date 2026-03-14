@@ -11,9 +11,10 @@ export async function pingTest(
 
     const start = Date.now();
     try {
-      await fetch(PING_URL, {
-        method: 'HEAD',
+      await fetch(`${PING_URL}&t=${Date.now()}`, {
+        method: 'GET',
         cache: 'no-store',
+        mode: 'cors',
         signal,
       });
     } catch (e: any) {
