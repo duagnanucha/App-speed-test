@@ -1,7 +1,14 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { Pressable, Text, StyleSheet, Platform } from 'react-native';
 import { COLORS } from '@/utils/constants';
+
+async function triggerHaptic() {
+  if (Platform.OS === 'web') return;
+  try {
+    const Haptics = await import('expo-haptics');
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  } catch {}
+}
 
 interface SpeedTestButtonProps {
   isRunning: boolean;
@@ -10,7 +17,7 @@ interface SpeedTestButtonProps {
 
 export default function SpeedTestButton({ isRunning, onPress }: SpeedTestButtonProps) {
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic();
     onPress();
   };
 
