@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { format } from 'date-fns';
 import { SpeedTestResult } from '@/utils/types';
 import { COLORS } from '@/utils/constants';
@@ -7,29 +7,66 @@ import { formatSpeed, formatPing } from '@/utils/formatSpeed';
 
 interface HistoryItemProps {
   item: SpeedTestResult;
+  index?: number;
 }
 
-export default function HistoryItem({ item }: HistoryItemProps) {
+export default function HistoryItem({ item, index = 0 }: HistoryItemProps) {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: index * 80,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 400,
+        delay: index * 80,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={[
+        styles.container,
+        { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+      ]}
+    >
       <Text style={styles.date}>
         {format(new Date(item.timestamp), 'dd MMM yyyy  HH:mm')}
       </Text>
       <View style={styles.row}>
         <View style={styles.metric}>
           <Text style={styles.label}>PING</Text>
-          <Text style={styles.value}>{formatPing(item.ping)} <Text style={styles.unit}>ms</Text></Text>
+          <View style={styles.valueRow}>
+            <Text style={styles.value}>{formatPing(item.ping)}</Text>
+            <Text style={styles.unit}> ms</Text>
+          </View>
         </View>
+        <View style={styles.divider} />
         <View style={styles.metric}>
           <Text style={styles.label}>DOWNLOAD</Text>
-          <Text style={styles.value}>{formatSpeed(item.download)} <Text style={styles.unit}>Mbps</Text></Text>
+          <View style={styles.valueRow}>
+            <Text style={styles.value}>{formatSpeed(item.download)}</Text>
+            <Text style={styles.unit}> Mbps</Text>
+          </View>
         </View>
+        <View style={styles.divider} />
         <View style={styles.metric}>
           <Text style={styles.label}>UPLOAD</Text>
-          <Text style={styles.value}>{formatSpeed(item.upload)} <Text style={styles.unit}>Mbps</Text></Text>
+          <View style={styles.valueRow}>
+            <Text style={styles.value}>{formatSpeed(item.upload)}</Text>
+            <Text style={styles.unit}> Mbps</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -44,31 +81,40 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 12,
     color: COLORS.textSecondary,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   metric: {
-    alignItems: 'center',
     flex: 1,
+    alignItems: 'center',
   },
   label: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '700',
     color: COLORS.textDim,
-    letterSpacing: 1,
-    marginBottom: 4,
+    letterSpacing: 1.2,
+    marginBottom: 6,
+  },
+  valueRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
   },
   value: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '700',
     color: COLORS.white,
   },
   unit: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '400',
     color: COLORS.textSecondary,
+  },
+  divider: {
+    width: 1,
+    height: 32,
+    backgroundColor: COLORS.card,
   },
 });

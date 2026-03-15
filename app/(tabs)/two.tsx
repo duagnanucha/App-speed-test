@@ -33,7 +33,7 @@ export default function HistoryScreen() {
       <FlatList
         data={history}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <HistoryItem item={item} />}
+        renderItem={({ item, index }) => <HistoryItem item={item} index={index} />}
         ListEmptyComponent={EmptyHistory}
         contentContainerStyle={history.length === 0 ? styles.emptyList : styles.list}
         onRefresh={refreshHistory}
