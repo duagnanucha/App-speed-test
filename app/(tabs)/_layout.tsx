@@ -1,11 +1,14 @@
 import React from 'react';
 import { Platform, Text } from 'react-native';
 import { Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '@/utils/constants';
 
-const TAB_BAR_HEIGHT = 60;
-
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+  const bottomPadding = Math.max(insets.bottom, 8);
+  const TAB_BAR_HEIGHT = 52 + bottomPadding;
+
   return (
     <Tabs
       screenOptions={{
@@ -17,7 +20,7 @@ export default function TabLayout() {
           borderTopColor: COLORS.card,
           borderTopWidth: 1,
           height: TAB_BAR_HEIGHT,
-          paddingBottom: 8,
+          paddingBottom: bottomPadding,
           paddingTop: 8,
           ...(Platform.OS === 'web' ? {
             position: 'fixed' as const,
