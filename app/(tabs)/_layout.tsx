@@ -1,7 +1,9 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Platform, Text } from 'react-native';
 import { Tabs } from 'expo-router';
 import { COLORS } from '@/utils/constants';
+
+const TAB_BAR_HEIGHT = 60;
 
 export default function TabLayout() {
   return (
@@ -14,10 +16,20 @@ export default function TabLayout() {
           backgroundColor: COLORS.surface,
           borderTopColor: COLORS.card,
           borderTopWidth: 1,
-          height: 60,
+          height: TAB_BAR_HEIGHT,
           paddingBottom: 8,
           paddingTop: 8,
+          ...(Platform.OS === 'web' ? {
+            position: 'fixed' as const,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 100,
+          } : {}),
         },
+        ...(Platform.OS === 'web' ? {
+          sceneStyle: { paddingBottom: TAB_BAR_HEIGHT },
+        } : {}),
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '600',
